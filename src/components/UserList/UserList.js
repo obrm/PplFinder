@@ -5,8 +5,9 @@ import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
+import { NATIONALITIES } from "./constants";
 
-const UserList = ({ users, isLoading }) => {
+const UserList = ({ users, isLoading, nationalities, setNationalities }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
 
   const handleMouseEnter = (index) => {
@@ -17,13 +18,20 @@ const UserList = ({ users, isLoading }) => {
     setHoveredUserId();
   };
 
+  const handleCheckBoxClick = (value) => {   
+    if (nationalities.includes(value)) {
+      setNationalities(nationalities.filter(nationality => nationality !== value));
+    } else {
+      setNationalities(oldArray => [...oldArray, value]);
+    }
+  }
+
   return (
     <S.UserList>
       <S.Filters>
-        <CheckBox value="BR" label="Brazil" />
-        <CheckBox value="AU" label="Australia" />
-        <CheckBox value="CA" label="Canada" />
-        <CheckBox value="DE" label="Germany" />
+        {NATIONALITIES.map((nationality) => (
+        <CheckBox key={nationality.id} {...nationality} handleCheckBoxClick={handleCheckBoxClick} />
+        ))}
       </S.Filters>
       <S.List>
         {users.map((user, index) => {
