@@ -36,8 +36,24 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
     const favoritesFromStorage = localStorage.getItem("favorites")
       ? JSON.parse(localStorage.getItem("favorites"))
       : [];
-    setFavorites(favoritesFromStorage);    
+    setFavorites(favoritesFromStorage);
   }, []);
+
+  const onFavIconClick = (email) => {
+    const isFavorite = !!favorites.find((favorite) => favorite.email === email);
+    if (!isFavorite) {
+      const user = users.find((user) => user.email === email);      
+      const newFavorites = [...favorites, user];
+      localStorage.setItem("favorites", JSON.stringify(newFavorites));
+      setFavorites(newFavorites);
+    } else {
+      const newFavorites = JSON.parse(localStorage.getItem("favorites")).filter(
+        (favorite) => favorite.email !== email
+      );
+      localStorage.setItem("favorites", JSON.stringify(newFavorites));
+      setFavorites(newFavorites);
+    }
+  };
 
   return (
     <S.UserList>
@@ -54,11 +70,11 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
         {users.map((user, index) => {
           return (
             <User
-              key={index}
+              key={user.email}
               user={user}
               index={index}
               favorites={favorites}
-              setFavorites={setFavorites}
+              onFavIconClick={onFavIconClick}
             />
           );
         })}

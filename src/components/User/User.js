@@ -4,7 +4,7 @@ import Text from "components/Text";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
-const User = ({ user, index, favorites, setFavorites }) => {
+const User = ({ user, index, favorites, onFavIconClick }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -16,21 +16,9 @@ const User = ({ user, index, favorites, setFavorites }) => {
     setHoveredUserId();
   };
 
-  useEffect(() => {
-    setIsFavorite(!!favorites.find((favorite) => favorite.id.value === user.id.value));
-  }, [])
-
-  const onFavIconClick = () => {
-    if (!isFavorite) {
-      const newFavorites = [...favorites, user]
-      setFavorites(newFavorites);
-      localStorage.setItem('favorites', JSON.stringify(newFavorites))
-    } else {
-      const newFavorites = favorites.filter((favorite) => favorite.id.value !== user.id.value)
-      setFavorites(newFavorites)
-      localStorage.setItem('favorites', JSON.stringify(newFavorites))
-    }
-  }
+  useEffect(() => {    
+    setIsFavorite(!!favorites.find((favorite) => favorite.email === user.email));
+  }, [favorites])
  
   return (
     <S.User
@@ -50,7 +38,7 @@ const User = ({ user, index, favorites, setFavorites }) => {
           {user?.location.city} {user?.location.country}
         </Text>
       </S.UserInfo>
-      <S.IconButtonWrapper isVisible={isFavorite ? isFavorite : index === hoveredUserId} onClick={onFavIconClick}>
+      <S.IconButtonWrapper isVisible={isFavorite ? isFavorite : index === hoveredUserId} onClick={() => onFavIconClick(user?.email)}>
         <IconButton>
           <FavoriteIcon color="error" />
         </IconButton>
