@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Text from "components/Text";
 import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
@@ -10,6 +10,14 @@ const Home = () => {
 
   const { users, isLoading } = usePeopleFetch(page , nationalities);
 
+  const handleCheckBoxClick = (value) => {
+    if (nationalities.includes(value)) {
+      setNationalities(nationalities.filter((nationality) => nationality !== value));
+    } else {
+      setNationalities((oldArray) => [...oldArray, value]);
+    }
+  };
+
   return (
     <S.Home>
       <S.Content>
@@ -18,7 +26,7 @@ const Home = () => {
             PplFinder
           </Text>
         </S.Header>
-        <UserList users={users} isLoading={isLoading} setNationalities={setNationalities} nationalities={nationalities} setPage={setPage} />
+        <UserList users={users} isLoading={isLoading} handleCheckBoxClick={handleCheckBoxClick} nationalities={nationalities} setPage={setPage} />
       </S.Content>
     </S.Home>
   );
