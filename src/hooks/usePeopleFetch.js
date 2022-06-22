@@ -5,13 +5,13 @@ export const usePeopleFetch = (page, nationalities) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  let nat = "";
+  let nationalitiesStr = "";
   if (nationalities.length === 1) {
-    nat = nationalities[0];
+    nationalitiesStr = nationalities[0];
   } else if (nationalities.length > 1) {
-    nat = nationalities.join(",");
+    nationalitiesStr = nationalities.join(",");
   }
-  const natUrl = !!nat ? `&nat=${nat}` : "";
+  const natUrl = !!nationalitiesStr ? `&nat=${nationalitiesStr}` : "";
   const url = `https://randomuser.me/api/?results=25&page=${page}&seed=foobar${natUrl}`;
 
   useEffect(() => {
