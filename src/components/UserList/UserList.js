@@ -13,9 +13,9 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
     if (listRef && listRef.current) {
       const event = listRef.current.addEventListener("scroll", () => {
         if (
-          !isLoading &&
           // clientHeight = the height of an element + the vertical padding.
           // scrollHeight = the height of element's content (including the content which isn't visible on the screen) + the vertical padding.
+          !isLoading &&
           listRef.current.scrollTop >=
             listRef.current.scrollHeight - listRef.current.clientHeight
         ) {
@@ -29,8 +29,7 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
         listRef.current.removeEventListener("scroll", event);
       };
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     const favoritesFromStorage = localStorage.getItem("favorites")
@@ -42,7 +41,7 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
   const onFavIconClick = (email) => {
     const isFavorite = !!favorites.find((favorite) => favorite.email === email);
     if (!isFavorite) {
-      const user = users.find((user) => user.email === email);      
+      const user = users.find((user) => user.email === email);
       const newFavorites = [...favorites, user];
       localStorage.setItem("favorites", JSON.stringify(newFavorites));
       setFavorites(newFavorites);

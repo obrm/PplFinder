@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const usePeopleFetch = (page, nationalities) => {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   let nationalitiesStr = "";
   if (nationalities.length === 1) {
@@ -21,15 +21,17 @@ export const usePeopleFetch = (page, nationalities) => {
   async function fetchUsers() {
     setIsLoading(true);
     const response = await axios.get(url);
-    setIsLoading(false);
     if (page === 1) {
       setUsers(response.data.results);
-    } else if (nationalities.length > 0 && page !== 1) {
-      const natUsers = users.filter((user) => nationalities.includes(user.nat))
+    } else if (nationalities.length > 0) {
+      const natUsers = users.filter((user) => nationalities.includes(user.nat));
       setUsers([...natUsers, ...response.data.results]);
+    } else if (nationalities.length === 0) {
+      setUsers((oldArray) => [...response.data.results, ...oldArray]);
     } else {
       setUsers((oldArray) => [...oldArray, ...response.data.results]);
     }
+    setIsLoading(false);
   }
 
   return { users, isLoading, fetchUsers };
