@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
@@ -7,8 +7,32 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
 import { NATIONALITIES } from "./constants";
 
-const UserList = ({ users, isLoading, nationalities, setNationalities }) => {
+const UserList = ({ users, isLoading, nationalities, setNationalities, setPage }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
+  const listRef = useRef(null);
+
+  
+  useEffect(() => {
+    if (listRef && listRef.current) {      
+      const event = listRef.current.addEventListener('scroll', () => {           
+        if (
+          !isLoading &&
+          // clientHeight = the height of an element + the vertical padding.          
+          // scrollHeight = the height of element's content (including the content which isn't visible on the screen) + the vertical padding.
+          listRef.current.scrollTop >= listRef.current.scrollHeight - listRef.current.clientHeight
+        ) {
+          setPage((oldValue) => {
+            return oldValue + 1
+          })
+        }
+      })
+
+      return () => {
+        listRef.current.removeEventListener('scroll', event)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -33,7 +57,7 @@ const UserList = ({ users, isLoading, nationalities, setNationalities }) => {
         <CheckBox key={nationality.id} {...nationality} handleCheckBoxClick={handleCheckBoxClick} />
         ))}
       </S.Filters>
-      <S.List>
+      <S.List ref={listRef} >
         {users.map((user, index) => {
           return (
             <S.User
