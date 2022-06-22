@@ -5,23 +5,30 @@ export const usePeopleFetch = (page, nationalities) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const nat = nationalities.length === 0 ? "" : nationalities.length > 1 ? nationalities.join(",") : nationalities[0];    
-  const natUrl = `&nat=${nat}`;
+  let nat = "";
+  if (nationalities.length === 1) {
+    nat = nationalities[0];
+  } else if (nationalities.length > 1) {
+    nat = nationalities.join(",");
+  }
+  const natUrl = !!nat ? `&nat=${nat}` : "";
   const url = `https://randomuser.me/api/?results=25&page=${page}&seed=foobar${natUrl}`;
 
-  useEffect(() => {        
+  useEffect(() => {
     fetchUsers();
   }, [nationalities, page]);
-  
-  
+
   async function fetchUsers() {
     setIsLoading(true);
     const response = await axios.get(url);
     setIsLoading(false);
     if (page === 1) {
-      setUsers(response.data.results);      
+      setUsers(response.data.results);
+    } else if (nationalities.length > 0 && page !== 1) {
+      const natUsers = users.filter((user) => nationalities.includes(user.nat))
+      setUsers([...natUsers, ...response.data.results]);
     } else {
-      setUsers(oldArray => [...oldArray, ...response.data.results])
+      setUsers((oldArray) => [...oldArray, ...response.data.results]);
     }
   }
 
