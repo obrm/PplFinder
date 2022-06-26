@@ -3,10 +3,13 @@ import * as S from "./style";
 import Text from "components/Text";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import { useFavorites } from "hooks";
 
-const User = ({ user, index, favorites, onFavIconClick }) => {
+const User = ({ user, index }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const { favorites, onFavIconClick } = useFavorites();
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -38,7 +41,7 @@ const User = ({ user, index, favorites, onFavIconClick }) => {
           {user?.location.city} {user?.location.country}
         </Text>
       </S.UserInfo>
-      <S.IconButtonWrapper isVisible={isFavorite ? isFavorite : index === hoveredUserId} onClick={() => onFavIconClick(user?.email)}>
+      <S.IconButtonWrapper isVisible={isFavorite ? isFavorite : index === hoveredUserId} onClick={() => onFavIconClick(user)}>
         <IconButton>
           <FavoriteIcon color="error" />
         </IconButton>

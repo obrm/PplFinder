@@ -1,13 +1,12 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect} from "react";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import User from "components/User";
 import * as S from "./style";
 import { NATIONALITIES } from "./constants";
 
-const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
-  const [favorites, setFavorites] = useState([]);
-  const listRef = useRef(null);
+const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {  
+  const listRef = useRef(null);   
 
   useEffect(() => {
     if (listRef && listRef.current) {
@@ -26,33 +25,12 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
       });
 
       return () => {
-        listRef.current.removeEventListener("scroll", event);
+        if (listRef.current) {          
+          listRef.current.removeEventListener("scroll", event);
+        }
       };
     }
   }, [isLoading]);
-
-  useEffect(() => {
-    const favoritesFromStorage = localStorage.getItem("favorites")
-      ? JSON.parse(localStorage.getItem("favorites"))
-      : [];
-    setFavorites(favoritesFromStorage);
-  }, []);
-
-  const onFavIconClick = (email) => {
-    const isFavorite = !!favorites.find((favorite) => favorite.email === email);
-    if (!isFavorite) {
-      const user = users.find((user) => user.email === email);
-      const newFavorites = [...favorites, user];
-      localStorage.setItem("favorites", JSON.stringify(newFavorites));
-      setFavorites(newFavorites);
-    } else {
-      const newFavorites = JSON.parse(localStorage.getItem("favorites")).filter(
-        (favorite) => favorite.email !== email
-      );
-      localStorage.setItem("favorites", JSON.stringify(newFavorites));
-      setFavorites(newFavorites);
-    }
-  };
 
   return (
     <S.UserList>
@@ -65,15 +43,13 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
           />
         ))}
       </S.Filters>
-      <S.List ref={listRef}>
+      <S.List ref={listRef}>          
         {users.map((user, index) => {
           return (
             <User
-              key={user.email}
+              key={user.id}
               user={user}
-              index={index}
-              favorites={favorites}
-              onFavIconClick={onFavIconClick}
+              index={index}  
             />
           );
         })}
