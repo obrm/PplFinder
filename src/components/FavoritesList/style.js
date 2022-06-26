@@ -14,3 +14,8 @@ export const List = styled.div`
   margin-block-start: 30px;
   overflow-y: auto;
 `;
+
+export const EmptyWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;

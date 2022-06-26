@@ -4,11 +4,11 @@ import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
 import * as S from "./style";
 
-const Home = () => {
-  const [nationalities, setNationalities] = useState([])
-  const [page, setPage] = useState(1)
+const Home = ({ favorites, onFavIconClick }) => {
+  const [nationalities, setNationalities] = useState([]);
+  const [page, setPage] = useState(1);
 
-  const { users, isLoading } = usePeopleFetch(page , nationalities);
+  const { users, isLoading } = usePeopleFetch(page, nationalities);
 
   const handleCheckBoxClick = (value) => {
     if (nationalities.includes(value)) {
@@ -26,7 +26,15 @@ const Home = () => {
             PplFinder
           </Text>
         </S.Header>
-        <UserList users={users} isLoading={isLoading} handleCheckBoxClick={handleCheckBoxClick} nationalities={nationalities} setPage={setPage} />
+        <UserList
+          users={users}
+          isLoading={isLoading}
+          handleCheckBoxClick={handleCheckBoxClick}
+          nationalities={nationalities}
+          setPage={setPage}
+          favorites={favorites}
+          onFavIconClick={onFavIconClick}
+        />
       </S.Content>
     </S.Home>
   );

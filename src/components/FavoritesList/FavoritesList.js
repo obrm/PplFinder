@@ -1,17 +1,20 @@
-import React from "react";
 import User from "components/User";
 import * as S from "./style";
-import { useFavorites } from "hooks";
 
-const FavoritesList = () => {
-  const { favorites } = useFavorites();
+const FavoritesList = ({ favorites , onFavIconClick }) => {
 
   return (
     <S.FavoritesList>
       <S.List>
-        {favorites.map((user, index) => {
-          return <User key={user.email} user={user} index={index} />;
-        })}
+        {favorites.length === 0 ? (
+          <S.EmptyWrapper>
+            <h2>No favorites added</h2>
+          </S.EmptyWrapper>
+        ) : (
+          favorites.map((user, index) => {
+            return <User key={user.email} user={user} index={index} onFavIconClick={onFavIconClick} favorites={favorites} />;
+          })
+        )}
       </S.List>
     </S.FavoritesList>
   );

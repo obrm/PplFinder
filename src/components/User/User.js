@@ -3,13 +3,10 @@ import * as S from "./style";
 import Text from "components/Text";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import { useFavorites } from "hooks";
 
-const User = ({ user, index }) => {
+const User = ({ user, index, onFavIconClick, favorites }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
   const [isFavorite, setIsFavorite] = useState(false);
-
-  const { favorites, onFavIconClick } = useFavorites();
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);

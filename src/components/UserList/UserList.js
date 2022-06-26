@@ -1,12 +1,19 @@
-import React, { useRef, useEffect} from "react";
+import React, { useRef, useEffect } from "react";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import User from "components/User";
 import * as S from "./style";
 import { NATIONALITIES } from "./constants";
 
-const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {  
-  const listRef = useRef(null);   
+const UserList = ({
+  users,
+  isLoading,
+  handleCheckBoxClick,
+  setPage,
+  favorites,
+  onFavIconClick,
+}) => {
+  const listRef = useRef(null);
 
   useEffect(() => {
     if (listRef && listRef.current) {
@@ -25,7 +32,7 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
       });
 
       return () => {
-        if (listRef.current) {          
+        if (listRef.current) {
           listRef.current.removeEventListener("scroll", event);
         }
       };
@@ -43,13 +50,15 @@ const UserList = ({ users, isLoading, handleCheckBoxClick, setPage }) => {
           />
         ))}
       </S.Filters>
-      <S.List ref={listRef}>          
+      <S.List ref={listRef}>
         {users.map((user, index) => {
           return (
             <User
-              key={user.id}
+              key={user.email}
               user={user}
-              index={index}  
+              index={index}
+              onFavIconClick={onFavIconClick}
+              favorites={favorites}
             />
           );
         })}
