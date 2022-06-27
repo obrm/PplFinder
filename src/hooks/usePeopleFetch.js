@@ -3,31 +3,23 @@ import axios from "axios";
 
 export const usePeopleFetch = (page, nationalities) => {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  let nationalitiesStr = "";
-  if (nationalities.length === 1) {
-    nationalitiesStr = nationalities[0];
-  } else if (nationalities.length > 1) {
-    nationalitiesStr = nationalities.join(",");
-  }
-  const natUrl = !!nationalitiesStr ? `&nat=${nationalitiesStr}` : "";
-  const url = `https://randomuser.me/api/?results=25&page=${page}&seed=foobar${natUrl}`;
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const url = `https://randomuser.me/api/?results=25&page=${page}&seed=foobar`;
 
   useEffect(() => {
+    console.log("👺", page);
     fetchUsers();
-  }, [nationalities, page]);
+  }, [page]);
 
   async function fetchUsers() {
+    if (nationalities.length) {
+      return
+    }
     setIsLoading(true);
     const response = await axios.get(url);
-    if (page === 1) {
+    if (page === 1) {      
       setUsers(response.data.results);
-    } else if (nationalities.length > 0) {
-      const natUsers = users.filter((user) => nationalities.includes(user.nat));
-      setUsers([...natUsers, ...response.data.results]);
-    } else if (nationalities.length === 0) {
-      setUsers((oldArray) => [...response.data.results, ...oldArray]);
     } else {
       setUsers((oldArray) => [...oldArray, ...response.data.results]);
     }

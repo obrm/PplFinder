@@ -7,35 +7,43 @@ import { usePeopleFetch } from "hooks";
 import { NATIONALITIES } from "./constants";
 
 const UserList = () => {
-  const [nationalities, setNationalities] = useState([]);
   const [page, setPage] = useState(1);
-  const listRef = useRef(null);
+  const [nationalities, setNationalities] = useState([]);
+  const [natUsers, setNatUsers] = useState(null);
 
   const { users, isLoading } = usePeopleFetch(page, nationalities);
+
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    if (nationalities.length) {
+      const natUsers = users.filter((user) => nationalities.includes(user.nat));
+      setNatUsers(natUsers);
+    } else {
+      setNatUsers(null);
+    }
+  }, [nationalities]);
 
   useEffect(() => {
     if (listRef && listRef.current) {
       const event = listRef.current.addEventListener("scroll", () => {
         if (
-          // clientHeight = the height of an element + the vertical padding.
-          // scrollHeight = the height of element's content (including the content which isn't visible on the screen) + the vertical padding.
           !isLoading &&
           listRef.current.scrollTop >=
             listRef.current.scrollHeight - listRef.current.clientHeight
-        ) {
+        ) {          
           setPage((oldValue) => {
             return oldValue + 1;
           });
         }
       });
-
       return () => {
         if (listRef.current) {
           listRef.current.removeEventListener("scroll", event);
         }
       };
     }
-  }, [isLoading]);
+  }, []);
 
   const handleCheckBoxClick = (value) => {
     if (nationalities.includes(value)) {
@@ -57,9 +65,13 @@ const UserList = () => {
         ))}
       </S.Filters>
       <S.List ref={listRef}>
-        {users.map((user, index) => {
-          return <User key={user.email} user={user} index={index} />;
-        })}
+        {natUsers
+          ? natUsers.map((user, index) => {
+              return <User key={user.email} user={user} index={index} />;
+            })
+          : users.map((user, index) => {
+              return <User key={user.email} user={user} index={index} />;
+            })}
         {isLoading && (
           <S.SpinnerWrapper>
             <Spinner color="primary" size="45px" thickness={6} variant="indeterminate" />
