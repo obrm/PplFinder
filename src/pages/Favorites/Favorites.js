@@ -3,7 +3,7 @@ import Text from "components/Text";
 import * as S from "./style";
 import FavoritesList from "components/FavoritesList";
 
-const Favorites = ({favorites, onFavIconClick}) => {
+const Favorites = () => {
   return (
     <S.Favorites>
       <S.Content>
@@ -12,7 +12,7 @@ const Favorites = ({favorites, onFavIconClick}) => {
             Favorites
           </Text>
         </S.Header>
-        <FavoritesList favorites={favorites} onFavIconClick={onFavIconClick} />
+        <FavoritesList/>
       </S.Content>
     </S.Favorites>
   );

@@ -9,9 +9,7 @@ const UserList = ({
   users,
   isLoading,
   handleCheckBoxClick,
-  setPage,
-  favorites,
-  onFavIconClick,
+  setPage
 }) => {
   const listRef = useRef(null);
 
@@ -57,8 +55,6 @@ const UserList = ({
               key={user.email}
               user={user}
               index={index}
-              onFavIconClick={onFavIconClick}
-              favorites={favorites}
             />
           );
         })}

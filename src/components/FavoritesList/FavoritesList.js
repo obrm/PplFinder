@@ -1,7 +1,9 @@
+import { useSelector } from "react-redux";
 import User from "components/User";
 import * as S from "./style";
 
-const FavoritesList = ({ favorites , onFavIconClick }) => {
+const FavoritesList = () => {
+  const { favorites } = useSelector((state) => state.favorites);
 
   return (
     <S.FavoritesList>
@@ -12,7 +14,7 @@ const FavoritesList = ({ favorites , onFavIconClick }) => {
           </S.EmptyWrapper>
         ) : (
           favorites.map((user, index) => {
-            return <User key={user.email} user={user} index={index} onFavIconClick={onFavIconClick} favorites={favorites} />;
+            return <User key={user.email} user={user} index={index} />;
           })
         )}
       </S.List>

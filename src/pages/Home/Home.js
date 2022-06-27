@@ -4,7 +4,7 @@ import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
 import * as S from "./style";
 
-const Home = ({ favorites, onFavIconClick }) => {
+const Home = () => {
   const [nationalities, setNationalities] = useState([]);
   const [page, setPage] = useState(1);
 
@@ -31,9 +31,7 @@ const Home = ({ favorites, onFavIconClick }) => {
           isLoading={isLoading}
           handleCheckBoxClick={handleCheckBoxClick}
           nationalities={nationalities}
-          setPage={setPage}
-          favorites={favorites}
-          onFavIconClick={onFavIconClick}
+          setPage={setPage}          
         />
       </S.Content>
     </S.Home>
