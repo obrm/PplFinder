@@ -1,17 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import User from "components/User";
 import * as S from "./style";
+import { usePeopleFetch } from "hooks";
 import { NATIONALITIES } from "./constants";
 
-const UserList = ({
-  users,
-  isLoading,
-  handleCheckBoxClick,
-  setPage
-}) => {
+const UserList = () => {
+  const [nationalities, setNationalities] = useState([]);
+  const [page, setPage] = useState(1);
   const listRef = useRef(null);
+
+  const { users, isLoading } = usePeopleFetch(page, nationalities);
 
   useEffect(() => {
     if (listRef && listRef.current) {
@@ -37,6 +37,14 @@ const UserList = ({
     }
   }, [isLoading]);
 
+  const handleCheckBoxClick = (value) => {
+    if (nationalities.includes(value)) {
+      setNationalities(nationalities.filter((nationality) => nationality !== value));
+    } else {
+      setNationalities((oldArray) => [...oldArray, value]);
+    }
+  };
+
   return (
     <S.UserList>
       <S.Filters>
@@ -50,13 +58,7 @@ const UserList = ({
       </S.Filters>
       <S.List ref={listRef}>
         {users.map((user, index) => {
-          return (
-            <User
-              key={user.email}
-              user={user}
-              index={index}
-            />
-          );
+          return <User key={user.email} user={user} index={index} />;
         })}
         {isLoading && (
           <S.SpinnerWrapper>
