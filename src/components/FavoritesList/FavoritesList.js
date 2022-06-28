@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import User from "components/User";
 import * as S from "./style";
+import Text from "components/Text";
 
 const FavoritesList = () => {
   const { favorites } = useSelector((state) => state.favorites);
@@ -8,9 +9,11 @@ const FavoritesList = () => {
   return (
     <S.FavoritesList>
       <S.List>
-        {favorites.length === 0 ? (
+        {!favorites.length ? (
           <S.EmptyWrapper>
-            <h2>No favorites added</h2>
+            <Text size="34px">
+              No favorites added
+            </Text>
           </S.EmptyWrapper>
         ) : (
           favorites.map((user, index) => {

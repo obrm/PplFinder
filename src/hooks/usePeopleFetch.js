@@ -24,5 +24,5 @@ export const usePeopleFetch = (pageNumber, nationalities) => {
     setIsLoading(false);
   }
 
-  return { users, isLoading, fetchUsers };
+  return { users, isLoading };
 };

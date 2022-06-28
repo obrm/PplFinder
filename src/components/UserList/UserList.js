@@ -9,7 +9,7 @@ import { NATIONALITIES } from "./constants";
 const UserList = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [nationalities, setNationalities] = useState([]);
-  const [natUsers, setNatUsers] = useState(null);
+  const [nationalitiesUsers, setNationalitiesUsers] = useState(null);
 
   const { users, isLoading } = usePeopleFetch(pageNumber, nationalities);
 
@@ -18,9 +18,9 @@ const UserList = () => {
   useEffect(() => {
     if (nationalities.length) {
       const natUsers = users.filter((user) => nationalities.includes(user.nat));
-      setNatUsers(natUsers);
+      setNationalitiesUsers(natUsers);
     } else {
-      setNatUsers(null);
+      setNationalitiesUsers(null);
     }
   }, [nationalities]);
 
@@ -31,9 +31,9 @@ const UserList = () => {
       if (isLoading) return;       
       // If observer.current is not null, disconnect observer from previous user node in order to hook the new last user node correctly
       if (observer.current) observer.current.disconnect();
+      // Set an IntersectionObserver to check if the lastUserNode that we are observing is intersecting, e.g. It is visible on the page, 
+      // then it means that we are at the end of list and we should make a new call to the API
       observer.current = new IntersectionObserver((entries) => {
-        // If the lastUserNode that we are observing is intersecting, e.g. It is visible on the page, it means we are at the end of list
-        // and we should make a new call to the API
         if (entries[0].isIntersecting) {
           setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
@@ -64,12 +64,12 @@ const UserList = () => {
         ))}
       </S.Filters>
       <S.List ref={listRef}>
-        {natUsers
-          ? natUsers.map((user, index) => {
+        {nationalitiesUsers
+          ? nationalitiesUsers.map((user, index) => {
               return <User key={user.email} user={user} index={index} />;
             })
           : users.map((user, index) => {
-            // is last element in users array?
+            // Is this the last element in users array?
               if (users.length === index + 1) {
                 return (
                   <User
