@@ -4,8 +4,6 @@ import axios from "axios";
 export const usePeopleFetch = (pageNumber, nationalities) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  
-  const url = `https://randomuser.me/api/?results=25&page=${pageNumber}&seed=foobar`;
 
   useEffect(() => {
     fetchUsers();
@@ -13,11 +11,12 @@ export const usePeopleFetch = (pageNumber, nationalities) => {
 
   async function fetchUsers() {
     if (nationalities.length) {
-      return
+      return;
     }
     setIsLoading(true);
+    const url = `https://randomuser.me/api/?results=25&page=${pageNumber}&seed=foobar`;
     const response = await axios.get(url);
-    if (pageNumber === 1) {      
+    if (pageNumber === 1) {
       setUsers(response.data.results);
     } else {
       setUsers((oldArray) => [...oldArray, ...response.data.results]);
