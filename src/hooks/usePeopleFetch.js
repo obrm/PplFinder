@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export const usePeopleFetch = (pageNumber, nationalities) => {
+export const usePeopleFetch = (pageNumber) => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -9,10 +9,7 @@ export const usePeopleFetch = (pageNumber, nationalities) => {
     fetchUsers();
   }, [pageNumber]);
 
-  async function fetchUsers() {
-    if (nationalities.length) {
-      return;
-    }
+  async function fetchUsers() {    
     setIsLoading(true);
     const url = `https://randomuser.me/api/?results=25&page=${pageNumber}&seed=foobar`;
     const response = await axios.get(url);

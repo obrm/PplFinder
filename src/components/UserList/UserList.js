@@ -11,7 +11,7 @@ const UserList = () => {
   const [nationalities, setNationalities] = useState([]);
   const [nationalitiesUsers, setNationalitiesUsers] = useState(null);
 
-  const { users, isLoading } = usePeopleFetch(pageNumber, nationalities);
+  const { users, isLoading } = usePeopleFetch(pageNumber);
 
   const listRef = useRef(null);
 
@@ -26,22 +26,22 @@ const UserList = () => {
 
   const observer = useRef();
   const lastUserElementRef = useCallback(
-    (lastUserNode) => {      
+    (lastUserNode) => {
       // Do not make a new API call if still loading
-      if (isLoading) return;       
+      if (isLoading) return;
       // If observer.current is not null, disconnect observer from previous user node in order to hook the new last user node correctly
       if (observer.current) observer.current.disconnect();
-      // Set an IntersectionObserver to check if the lastUserNode that we are observing is intersecting, e.g. It is visible on the page, 
+      // Set an IntersectionObserver to check if the lastUserNode that we are observing is intersecting, e.g. It is visible on the page,
       // then it means that we are at the end of list and we should make a new call to the API
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !nationalities.length) {
           setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
       });
       // If there is a lastUserElement, we make sure the observer is observing our lastUserElement
       if (lastUserNode) observer.current.observe(lastUserNode);
     },
-    [isLoading]
+    [isLoading, nationalities]
   );
 
   const handleCheckBoxClick = (value) => {
@@ -69,7 +69,7 @@ const UserList = () => {
               return <User key={user.email} user={user} index={index} />;
             })
           : users.map((user, index) => {
-            // Is this the last element in users array?
+              // Is this the last element in users array?
               if (users.length === index + 1) {
                 return (
                   <User
