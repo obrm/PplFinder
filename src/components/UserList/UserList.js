@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import User from "components/User";
@@ -7,11 +7,11 @@ import { usePeopleFetch } from "hooks";
 import { NATIONALITIES } from "./constants";
 
 const UserList = () => {
-  const [page, setPage] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
   const [nationalities, setNationalities] = useState([]);
   const [natUsers, setNatUsers] = useState(null);
 
-  const { users, isLoading } = usePeopleFetch(page, nationalities);
+  const { users, isLoading } = usePeopleFetch(pageNumber, nationalities);
 
   const listRef = useRef(null);
 
@@ -24,26 +24,25 @@ const UserList = () => {
     }
   }, [nationalities]);
 
-  useEffect(() => {
-    if (listRef && listRef.current) {
-      const event = listRef.current.addEventListener("scroll", () => {
-        if (
-          !isLoading &&
-          listRef.current.scrollTop >=
-            listRef.current.scrollHeight - listRef.current.clientHeight
-        ) {          
-          setPage((oldValue) => {
-            return oldValue + 1;
-          });
+  const observer = useRef();
+  const lastUserElementRef = useCallback(
+    (lastUserNode) => {      
+      // Do not make a new API call if still loading
+      if (isLoading) return;       
+      // If observer.current is not null, disconnect observer from previous user node in order to hook the new last user node correctly
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        // If the lastUserNode that we are observing is intersecting, e.g. It is visible on the page, it means we are at the end of list
+        // and we should make a new call to the API
+        if (entries[0].isIntersecting) {
+          setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
       });
-      return () => {
-        if (listRef.current) {
-          listRef.current.removeEventListener("scroll", event);
-        }
-      };
-    }
-  }, []);
+      // If there is a lastUserElement, we make sure the observer is observing our lastUserElement
+      if (lastUserNode) observer.current.observe(lastUserNode);
+    },
+    [isLoading]
+  );
 
   const handleCheckBoxClick = (value) => {
     if (nationalities.includes(value)) {
@@ -70,7 +69,19 @@ const UserList = () => {
               return <User key={user.email} user={user} index={index} />;
             })
           : users.map((user, index) => {
-              return <User key={user.email} user={user} index={index} />;
+            // is last element in users array?
+              if (users.length === index + 1) {
+                return (
+                  <User
+                    referenced={lastUserElementRef}
+                    key={user.email}
+                    user={user}
+                    index={index}
+                  />
+                );
+              } else {
+                return <User key={user.email} user={user} index={index} />;
+              }
             })}
         {isLoading && (
           <S.SpinnerWrapper>

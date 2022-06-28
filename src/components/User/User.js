@@ -6,7 +6,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import { toggleFavorite } from "features/favoritesSlice";
 
-const User = ({ user, index }) => {
+const User = ({ user, index, referenced }) => {
   const { favorites } = useSelector((state) => state.favorites);
   const dispatch = useDispatch();
 
@@ -26,7 +26,11 @@ const User = ({ user, index }) => {
   }, [favorites]);
 
   return (
-    <S.User onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={handleMouseLeave}>
+    <S.User
+      onMouseEnter={() => handleMouseEnter(index)}
+      onMouseLeave={handleMouseLeave}
+      ref={referenced ? referenced : null}
+    >
       <S.UserPicture src={user?.picture.large} alt="" />
       <S.UserInfo>
         <Text size="22px" bold>
