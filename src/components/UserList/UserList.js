@@ -34,14 +34,14 @@ const UserList = () => {
       // Set an IntersectionObserver to check if the lastUserNode that we are observing is intersecting, e.g. It is visible on the page,
       // then it means that we are at the end of list and we should make a new call to the API
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && !nationalities.length) {
+        if (entries[0].isIntersecting) {
           setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
       });
       // If there is a lastUserElement, we make sure the observer is observing our lastUserElement
       if (lastUserNode) observer.current.observe(lastUserNode);
     },
-    [isLoading, nationalities]
+    [isLoading]
   );
 
   const handleCheckBoxClick = (value) => {
