@@ -13,8 +13,6 @@ const UserList = () => {
 
   const { users, isLoading } = usePeopleFetch(pageNumber);
 
-  const listRef = useRef(null);
-
   useEffect(() => {
     if (nationalities.length) {
       const natUsers = users.filter((user) => nationalities.includes(user.nat));
@@ -63,7 +61,7 @@ const UserList = () => {
           />
         ))}
       </S.Filters>
-      <S.List ref={listRef}>
+      <S.List>
         {nationalitiesUsers
           ? nationalitiesUsers.map((user, index) => {
               return <User key={user.email} user={user} index={index} />;
