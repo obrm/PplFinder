@@ -7,13 +7,13 @@ export const usePeopleFetch = (pageNumber, nationalities) => {
 
   useEffect(() => {
     fetchUsers();
-  }, [pageNumber]);
+  }, [pageNumber, nationalities]);
 
   async function fetchUsers() {
     setIsLoading(true);
     let nat = "";
     if (nationalities) {
-      nat = "&?nat=" + nationalities.split(",");
+      nat = "&nat=" + nationalities.join(",");
     }
     const url = `https://randomuser.me/api/?results=25&page=${pageNumber}&seed=foobar${nat}`;
     const response = await axios.get(url);
