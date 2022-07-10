@@ -11,16 +11,16 @@ const UserList = () => {
   const [nationalities, setNationalities] = useState([]);
   const [nationalitiesUsers, setNationalitiesUsers] = useState(null);
 
-  const { users, isLoading } = usePeopleFetch(pageNumber);
+  const { users, isLoading } = usePeopleFetch(pageNumber, nationalities);
 
-  useEffect(() => {
-    if (nationalities.length) {
-      const natUsers = users.filter((user) => nationalities.includes(user.nat));
-      setNationalitiesUsers(natUsers);
-    } else {
-      setNationalitiesUsers(null);
-    }
-  }, [nationalities]);
+  // useEffect(() => {
+  //   if (nationalities.length) {
+  //     const natUsers = users.filter((user) => nationalities.includes(user.nat));
+  //     setNationalitiesUsers(natUsers);
+  //   } else {
+  //     setNationalitiesUsers(null);
+  //   }
+  // }, [nationalities]);
 
   const observer = useRef();
   const lastUserElementRef = useCallback(
@@ -62,25 +62,21 @@ const UserList = () => {
         ))}
       </S.Filters>
       <S.List>
-        {nationalitiesUsers
-          ? nationalitiesUsers.map((user, index) => {
-              return <User key={user.email} user={user} index={index} />;
-            })
-          : users.map((user, index) => {
-              // Is this the last element in users array?
-              if (users.length === index + 1) {
-                return (
-                  <User
-                    referenced={lastUserElementRef}
-                    key={user.email}
-                    user={user}
-                    index={index}
-                  />
-                );
-              } else {
-                return <User key={user.email} user={user} index={index} />;
-              }
-            })}
+        {users.map((user, index) => {
+          // Is this the last element in users array?
+          if (users.length === index + 1) {
+            return (
+              <User
+                referenced={lastUserElementRef}
+                key={user.email}
+                user={user}
+                index={index}
+              />
+            );
+          } else {
+            return <User key={user.email} user={user} index={index} />;
+          }
+        })}
         {isLoading && (
           <S.SpinnerWrapper>
             <Spinner color="primary" size="45px" thickness={6} variant="indeterminate" />
